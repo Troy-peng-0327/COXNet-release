@@ -7,8 +7,8 @@
 # pip install torch==1.10.0+cu113 torchvision==0.11.1+cu113 -f https://download.pytorch.org/whl/torch_stable.html
 
 # Core detection framework
-mmcv-full==1.7.0
-mmdet==2.28.2
+# mmcv-full==1.7.0
+# mmdet==2.28.2
 
 # Wavelet transform (CLFM核心依赖)
 pytorch-wavelets==1.3.0
@@ -25,7 +25,7 @@ albumentations==2.0.8
 pycocotools==2.0.7
 
 # Numerical computing
-numpy==1.24.3
+numpy==1.24.4
 scipy==1.10.1
 pandas==2.0.3
 

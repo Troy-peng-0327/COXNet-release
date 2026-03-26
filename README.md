@@ -74,7 +74,7 @@ COXNet is an RGBT tiny object detection framework that jointly addresses cross-m
 
 ## Installation
 
-**Requirements:** CUDA 11.3 · Python 3.8
+**Requirements:** CUDA 11.3 · Python 3.9.18
 
 **Step 1 — Clone the repository**
 
@@ -101,7 +101,8 @@ pip install mmcv-full==1.7.0 \
 
 ```bash
 pip install -r requirements.txt
-pip install -e .
+pip install setuptools==59.5.0 --force-reinstall
+python setup.py develop
 ```
 
 ---
