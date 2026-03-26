@@ -1,65 +1,160 @@
-# mmdet-rgbtdroneperson
-Official code for "Drone-based RGBT Tiny Person Detection".
-![The structure of QFDet](QFDet_v3.jpg)
+# COXNet: Cross-Layer Fusion With Adaptive Alignment and Scale Integration for RGBT Tiny Object Detection
 
+**IEEE Transactions on Circuits and Systems for Video Technology**, Vol. 36, No. 1, January 2026
+
+[![paper](https://img.shields.io/badge/IEEE%20TCSVT-2026-blue)](https://doi.org/10.1109/TCSVT.2025.3595147)
+
+**Authors:** Peiran Peng, Tingfa Xu, Liqiang Song, Mengqi Zhu, Yuqiang Fang, Jianan Li
+
+---
+
+## Introduction
+
+COXNet is an RGBT tiny object detection framework that jointly addresses cross-modal fusion, misalignment, and scale variation in drone-based multi-spectral imagery. The core innovations are: **(1) CLFM** (Cross-Layer Fusion Module), which leverages wavelet decomposition to align and fuse complementary RGB and thermal features across pyramid levels; **(2) DASR** (Dynamic Adaptive Scale Refinement), which recalibrates spatial correspondences and integrates multi-scale contextual cues for robust tiny object localization; and **(3) a GeoShape-based label assignment strategy** that better fits the irregular geometry of tiny aerial targets, improving recall under severe scale imbalance.
+
+---
+
+## Main Results
+
+### RGBTDronePerson
+
+| Model | mAP50 | mAP50 (tiny) | mAP25 |
+|-------|------:|-------------:|------:|
+| COXNet | **50.04** | — | — |
+
+### VTUAV-det
+
+| Model | mAP50 |
+|-------|------:|
+| COXNet | **76.1** |
+
+### NII-CU
+
+| Model | mAP50 |
+|-------|------:|
+| COXNet | **98.2** |
+
+---
 
 ## Installation
-Please refer to <https://github.com/open-mmlab/mmdetection/tree/2.x>
-### Environment
-```
-mmdet 2.25.1
-mmcv-full 1.6.1
-pytorch 1.10.0
+
+**Requirements:** CUDA 11.3 · Python 3.8
+
+**Step 1 — Clone the repository**
+
+```bash
+git clone https://github.com/your-username/COXNet-release.git
+cd COXNet-release
 ```
 
-## Trained Model
-### On RGBTDronePerson
-|Models|mAP50|mAP50(tiny)|mAP25|
-|------|-----|-----|-----|
-|[QFDet](https://drive.google.com/file/d/1TuVXy_h0PxTK8qLY1MgqJTNiAumV8p0V/view?usp=sharing)|42.08|44.04|57.34|
-|[QFDet*](https://drive.google.com/file/d/1IkgaU5Ei88PKYZBIb0JBLv5E5kgKevrP/view?usp=drive_link)|46.72|48.75|61.62|
-### On VTUAV-det
-|Models|mAP|mAP50|mAP75|
-|------|-----|-----|-----|
-|[QFDet](https://drive.google.com/file/d/1Savf3oeiWek4eeXrvYLuaoBMoZW3nag8/view?usp=sharing)|31.10|70.40|22.90|
-|[QFDet*](https://drive.google.com/file/d/1NZfd37POE0S-nMPI5RsGg1a7lN17HNvC/view?usp=sharing)|33.30|75.50|24.20|
+**Step 2 — Install PyTorch**
 
-## Train
-Train QFDet on RGBTDronePerson.
-```
-python tools/train.py qfdet_configs/qfdet_r50_fpn_1x_rgbtdroneperson.py
-```
-Train QFDet* on RGBTDronePerson.
-```
-python tools/train.py qfdet_configs/qfdet_star_r50_fpn_1x_rgbtdroneperson.py
-```
-Train QFDet on VTUAV-det.
-```
-python tools/train.py qfdet_configs/qfdet_r50_fpn_1x_rgbtdroneperson.py
-```
-Train QFDet* on VTUAV-det.
-```
-python tools/train.py qfdet_configs/qfdet_star_r50_fpn_1x_rgbtdroneperson.py
-```
-## Test
-For example, test checkpoint epoch_11_qfdet_rgbtdroneperson.pth:
-```
-python tools/test.py qfdet_configs/qfdet_r50_fpn_1x_rgbtdroneperson.py work_dir/qfdet_r50_fpn/rgbtdroneperson/epoch_11_qfdet_rgbtdroneperson.pth --eval bbox
+```bash
+pip install torch==1.10.0+cu113 torchvision==0.11.1+cu113 \
+    -f https://download.pytorch.org/whl/torch_stable.html
 ```
 
-## Dataset
-Please refer to our [github page](https://nnnnerd.github.io/RGBTDronePerson/).
+**Step 3 — Install mmcv-full**
+
+```bash
+pip install mmcv-full==1.7.0 \
+    -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10/index.html
+```
+
+**Step 4 — Install remaining dependencies**
+
+```bash
+pip install -r requirements.txt
+pip install -e .
+```
+
+---
+
+## Dataset Preparation
+
+COXNet is evaluated on three RGBT benchmarks:
+
+| Dataset | Description | Link |
+|---------|-------------|------|
+| **RGBTDronePerson** | Drone-based RGB-thermal person detection | [Project page](https://nnnnerd.github.io/RGBTDronePerson/) |
+| **VTUAV-det** | Aerial vehicle and UAV detection | [Project page](https://nnnnerd.github.io/RGBTDronePerson/) |
+| **NII-CU** | From "Deep learning with RGB and thermal images onboard a drone for monitoring operations" | See paper |
+
+Organize datasets under `data/` as follows:
+
+```
+data/
+├── RGBTDronePerson/
+│   ├── train/
+│   │   ├── visible/
+│   │   └── infrared/
+│   └── val/
+│       ├── visible/
+│       └── infrared/
+└── VTUAV/
+    ├── train/
+    └── val/
+```
+
+Update the `data_root` paths in the corresponding config files under `configs/_base_/datasets/` before training.
+
+---
+
+## Training
+
+**Single GPU**
+
+```bash
+python tools/train.py configs/coxnet/coxnet_r50_fpn_1x_rgbtdroneperson.py
+```
+
+**Multi-GPU (e.g., 4 GPUs)**
+
+```bash
+bash tools/dist_train.sh configs/coxnet/coxnet_r50_fpn_1x_rgbtdroneperson.py 4
+```
+
+Available configs:
+
+```
+configs/coxnet/
+├── coxnet_r50_fpn_1x_rgbtdroneperson.py
+├── coxnet_star_r50_fpn_1x_rgbtdroneperson.py
+├── coxnet_r50_fpn_1x_vtuav.py
+└── coxnet_star_r50_fpn_1x_vtuav.py
+```
+
+---
+
+## Evaluation
+
+```bash
+python tools/test.py \
+    configs/coxnet/coxnet_r50_fpn_1x_rgbtdroneperson.py \
+    /path/to/checkpoint.pth \
+    --eval bbox
+```
+
+---
 
 ## Citation
-```
-@article{ZHANG202361,
-title = {Drone-based RGBT tiny person detection},
-journal = {ISPRS Journal of Photogrammetry and Remote Sensing},
-volume = {204},
-pages = {61-76},
-year = {2023},
-doi = {https://doi.org/10.1016/j.isprsjprs.2023.08.016},
-url = {https://www.sciencedirect.com/science/article/pii/S0924271623002319},
-author = {Yan Zhang and Chang Xu and Wen Yang and Guangjun He and Huai Yu and Lei Yu and Gui-Song Xia}
+
+If you find this work useful, please cite:
+
+```bibtex
+@article{peng2025coxnet,
+  title={COXNet: Cross-layer fusion with adaptive alignment and scale integration for RGBT tiny object detection},
+  author={Peng, Peiran and Xu, Tingfa and Zhu, Mengqi Zhu and Fang, Yuqiang and Li, Jianan},
+  journal={IEEE Transactions on Circuits and Systems for Video Technology},
+  year={2025},
+  publisher={IEEE}
 }
 ```
+
+---
+
+## Acknowledgement
+
+This work was supported by the Natural Science Foundation of Chongqing, China, under Grant cstc2021jcyj-msxmX1130.
+
+This codebase is built upon [MMDetection](https://github.com/open-mmlab/mmdetection). We thank the OpenMMLab team for their excellent open-source framework.

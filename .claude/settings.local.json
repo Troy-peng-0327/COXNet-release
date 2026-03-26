@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm configs/_base_/datasets/coco_detection.py)",
+      "Bash(rm -rf configs/atss configs/qfdet)",
+      "Bash(cd:*)",
+      "Bash(python -c \":*)"
+    ]
+  }
+}
