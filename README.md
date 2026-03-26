@@ -18,21 +18,26 @@ COXNet is an RGBT tiny object detection framework that jointly addresses cross-m
 
 ### RGBTDronePerson
 
-| Model | mAP50 | mAP50 (tiny) | mAP25 |
-|-------|------:|-------------:|------:|
-| COXNet | **50.04** | — | — |
+| Method | mAP25 | mAP50 (all) | mAP50 (tiny) | mAP50 (tiny1) | mAP50 (tiny2) | mAP50 (tiny3) | mAP50 (small) | FLOPs (G) | FPS |
+|--------|-------|-------------|--------------|---------------|---------------|---------------|---------------|-----------|-----|
+| COXNet | 59.01 | 45.57 | 47.18 | 27.37 | 35.55 | 52.56 | 29.74 | 51.27 | 17.6 |
+| COXNet* | 62.76 | 50.04 | 51.82 | 23.08 | 40.10 | 56.76 | 30.89 | 123.59 | 12.9 |
+
+*COXNet* uses detection head covering P2-P6; COXNet uses standard P3-P7 head.
 
 ### VTUAV-det
 
-| Model | mAP50 |
-|-------|------:|
-| COXNet | **76.1** |
+| Method | mAP | mAP50 | mAP75 | mAPs | mAPm | mAPl | FPS |
+|--------|-----|-------|-------|------|------|------|-----|
+| COXNet | 31.5 | 71.8 | 23.1 | 15.3 | 30.6 | 56.0 | 21.2 |
+| COXNet* | 33.5 | 76.1 | 25.1 | 18.6 | 32.6 | 56.8 | 15.0 |
 
 ### NII-CU
 
-| Model | mAP50 |
-|-------|------:|
-| COXNet | **98.2** |
+| Method | mAP | mAP50 | mAP75 | FPS |
+|--------|-----|-------|-------|-----|
+| COXNet | 61.4 | 98.2 | 70.5 | 17.9 |
+| COXNet* | 65.4 | 97.9 | 79.6 | 13.1 |
 
 ---
 
@@ -78,7 +83,7 @@ COXNet is evaluated on three RGBT benchmarks:
 |---------|-------------|------|
 | **RGBTDronePerson** | Drone-based RGB-thermal person detection | [Project page](https://nnnnerd.github.io/RGBTDronePerson/) |
 | **VTUAV-det** | Aerial vehicle and UAV detection | [Project page](https://nnnnerd.github.io/RGBTDronePerson/) |
-| **NII-CU** | From "Deep learning with RGB and thermal images onboard a drone for monitoring operations" | See paper |
+| **NII-CU** | 6,000 RGBT image pairs with 19,000 annotated instances (pedestrian, vehicle, cyclist) | [Dataset](https://www.okutama-segmentation.org/) |
 
 Organize datasets under `data/` as follows:
 
